@@ -8,10 +8,51 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var startButtonTitle = "Start"
+    @State private var timerTitle = "25:00"
     var body: some View {
-        Text("Hello, World!")
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        ZStack {
+            LinearGradient(gradient: Gradient(colors: [.gray, .black]), startPoint: .top, endPoint: .bottom)
+            VStack {
+                Text(timerTitle)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .foregroundColor(.red)
+                    .font(.largeTitle)
+                HStack {
+                    Spacer()
+                    
+                    Button("Cancel") {
+                        //canel timer and reset
+                    }
+                    .font(.headline)
+                    .foregroundColor(.orange)
+                    
+                    
+                    Button(startButtonTitle) {
+                        // start or pause timer
+                        
+                        // if started set to pause
+                        startButtonTitle = "Pause"
+                        
+                        // if Paused set to Resume
+                        //startButtonTitle = "Resume"
+                        
+                        
+                        
+                    }
+                    .font(.headline)
+                    .foregroundColor(.green)
+                    
+                    Spacer()
+                }
+            }
+        }
+        
     }
+    
+    
+    
+    
 }
 
 
