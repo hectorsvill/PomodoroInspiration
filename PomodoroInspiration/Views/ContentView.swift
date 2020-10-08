@@ -7,9 +7,15 @@
 
 import SwiftUI
 
+enum TimerState {
+    case notStarted, started, paused, resumed, finished
+}
+
 struct ContentView: View {
+    @State private var timerState: TimerState = .notStarted
     @State private var startButtonTitle = "Start"
     @State private var timerTitle = "25:00"
+    
     var body: some View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [.gray, .black]), startPoint: .top, endPoint: .bottom)
@@ -25,20 +31,11 @@ struct ContentView: View {
                         //canel timer and reset
                     }
                     .font(.headline)
-                    .foregroundColor(.orange)
+                    .foregroundColor(.gray)
                     
                     
                     Button(startButtonTitle) {
-                        // start or pause timer
-                        
-                        // if started set to pause
-                        startButtonTitle = "Pause"
-                        
-                        // if Paused set to Resume
-                        //startButtonTitle = "Resume"
-                        
-                        
-                        
+                        startButtonTapped()
                     }
                     .font(.headline)
                     .foregroundColor(.green)
@@ -50,8 +47,17 @@ struct ContentView: View {
         
     }
     
-    
-    
+    private func startButtonTapped() {
+        if timerState == .notStarted || timerState == .paused {
+            timerState = .started
+            startButtonTitle = "Pause"
+        } else if timerState == .started {
+            timerState = .paused
+            startButtonTitle = "Resume"
+        } else if timerState == .finished {
+            // start 5 minute break timer
+        }
+    }
     
 }
 
