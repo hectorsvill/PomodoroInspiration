@@ -11,10 +11,17 @@ enum TimerState {
     case notStarted, started, paused, resumed, finished
 }
 
+fileprivate let minutes25 = 1500
+
 struct ContentView: View {
     @State private var timerState: TimerState = .notStarted
     @State private var startButtonTitle = "Start"
     @State private var timerTitle = "25:00"
+    
+    // Timer
+    @State var timerCountInSeconds = minutes25 // 25 minutes in seconds
+    @State var timer: Timer! = nil
+    
     
     var body: some View {
         ZStack {
@@ -28,7 +35,7 @@ struct ContentView: View {
                     Spacer()
                     
                     Button("Cancel") {
-                        //canel timer and reset
+                        cancelButtonPressed()
                     }
                     .font(.headline)
                     .foregroundColor(.gray)
@@ -44,6 +51,15 @@ struct ContentView: View {
                 }
             }
         }
+    }
+    
+    private func cancelButtonPressed() {
+        timer.invalidate()
+        timer = nil
+        timerCountInSeconds = minutes25
+        timerState = .notStarted
+        startButtonTitle = "Start"
+        timerTitle = "\(timerCountInSeconds)"
         
     }
     
@@ -51,14 +67,31 @@ struct ContentView: View {
         if timerState == .notStarted || timerState == .paused {
             timerState = .started
             startButtonTitle = "Pause"
+            startTimer()
         } else if timerState == .started {
             timerState = .paused
             startButtonTitle = "Resume"
+            timer.invalidate()
         } else if timerState == .finished {
             // start 5 minute break timer
+            
         }
     }
     
+    private func startTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            timerCountInSeconds -= 1
+            
+            timerTitle = "\(timerCountInSeconds)"
+            
+            if timerCountInSeconds == 0 {
+                timer.invalidate()
+            }
+            
+        }
+        
+    }
+
 }
 
 
