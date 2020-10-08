@@ -22,7 +22,6 @@ struct ContentView: View {
     @State var timerCountInSeconds = minutes25 // 25 minutes in seconds
     @State var timer: Timer! = nil
     
-    
     var body: some View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [.gray, .black]), startPoint: .top, endPoint: .bottom)
@@ -53,13 +52,28 @@ struct ContentView: View {
         }
     }
     
+    private func fetchTimerTitle() -> String {
+        let minutes = timerCountInSeconds / 60
+        let seconds = timerCountInSeconds % 60
+        
+        let minutesString = "\(minutes < 10 ? "0" : "")\(minutes)"
+        let secondsString = "\(seconds < 10 ? "0" : "")\(seconds)"
+        
+        
+        return "\(minutesString):\(secondsString)"
+    }
+    
     private func cancelButtonPressed() {
+        guard timer != nil else {
+            return
+        }
+        
         timer.invalidate()
         timer = nil
         timerCountInSeconds = minutes25
         timerState = .notStarted
         startButtonTitle = "Start"
-        timerTitle = "\(timerCountInSeconds)"
+        timerTitle = fetchTimerTitle()
         
     }
     
@@ -82,12 +96,12 @@ struct ContentView: View {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
             timerCountInSeconds -= 1
             
-            timerTitle = "\(timerCountInSeconds)"
+            timerTitle = fetchTimerTitle()
             
             if timerCountInSeconds == 0 {
                 timer.invalidate()
+                timerState = .finished
             }
-            
         }
         
     }
