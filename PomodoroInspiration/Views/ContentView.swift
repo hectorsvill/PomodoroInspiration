@@ -17,7 +17,7 @@ struct ContentView: View {
     @State private var timerState: TimerState = .notStarted
     @State private var startButtonTitle = "Start"
     @State private var timerTitle = "25:00"
-    
+    @State private var cancelButtonIsDiasabled = true
     // Timer
     @State var timerCountInSeconds = minutes25 // 25 minutes in seconds
     @State var timer: Timer! = nil
@@ -36,6 +36,7 @@ struct ContentView: View {
                     Button("Cancel") {
                         cancelButtonPressed()
                     }
+                    .disabled(cancelButtonIsDiasabled)
                     .font(.headline)
                     .foregroundColor(.gray)
                     
@@ -72,12 +73,14 @@ struct ContentView: View {
         timer = nil
         timerCountInSeconds = minutes25
         timerState = .notStarted
+        cancelButtonIsDiasabled = true
         startButtonTitle = "Start"
         timerTitle = fetchTimerTitle()
         
     }
     
     private func startButtonTapped() {
+        cancelButtonIsDiasabled = false
         if timerState == .notStarted || timerState == .paused {
             timerState = .started
             startButtonTitle = "Pause"
