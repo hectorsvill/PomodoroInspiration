@@ -14,6 +14,9 @@ enum TimerState {
 fileprivate let minutes25 = 1500
 fileprivate let minutes5 = 300
 
+fileprivate let bottomTopSpacer: CGFloat = 50
+
+
 struct ContentView: View {
     @State private var timerState: TimerState = .notStarted
     @State private var startButtonTitle = "Start"
@@ -28,7 +31,8 @@ struct ContentView: View {
             LinearGradient(gradient: Gradient(colors: [.gray, .black]), startPoint: .topLeading, endPoint: .bottomTrailing)
             
             VStack {
-                Spacer(minLength: 50)
+                Spacer(minLength: bottomTopSpacer)
+                
                 Text(isBreakTimer ? "Break" : "Work")
                     .frame(width: 50, height: 50, alignment: .center)
                     .font(.system(size: 18, weight: .light, design: .default))
@@ -71,6 +75,8 @@ struct ContentView: View {
                     
                     Spacer()
                 }
+                
+                Spacer(minLength: bottomTopSpacer)
             }
         }
     }
