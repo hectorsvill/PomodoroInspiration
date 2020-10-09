@@ -24,31 +24,50 @@ struct ContentView: View {
     @State var timer: Timer! = nil
     
     var body: some View {
-        
         ZStack {
             LinearGradient(gradient: Gradient(colors: [.gray, .black]), startPoint: .topLeading, endPoint: .bottomTrailing)
+            
             VStack {
+                Spacer(minLength: 50)
+                Text(isBreakTimer ? "Break" : "Work")
+                    .frame(width: 50, height: 50, alignment: .center)
+                    .font(.system(size: 18, weight: .light, design: .default))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.white, lineWidth: 2)
+                    )
+                
                 Text(timerTitle)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .foregroundColor(getTimerTitleForegroundColor())
-                    .font(.largeTitle)
+                    .foregroundColor(getForegroundColor())
+                    .font(.system(size: 100, weight: .heavy, design: .default))
                 
                 HStack {
                     Spacer()
                     
-                    Button("Cancel") {
-                        cancelButtonPressed()
+                    Button(action: cancelButtonClicked) {
+                        Text("Cancel")
                     }
+                    .frame(maxWidth: 100, maxHeight: 100)
                     .disabled(timerState == .notStarted)
-                    .font(.headline)
                     .foregroundColor(timerState == .notStarted ? .gray : .orange)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.white, lineWidth: 2)
+                    )
                     
                     
-                    Button(startButtonTitle) {
-                        startButtonTapped()
+                    Spacer(minLength: 16)
+                    
+                    Button(action: startButtonClicked){
+                        Text(startButtonTitle)
                     }
-                    .font(.headline)
-                    .foregroundColor(.green)
+                    .frame(maxWidth: 100, maxHeight: 100)
+                    .foregroundColor(getForegroundColor())
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.white, lineWidth: 2)
+                    )
                     
                     Spacer()
                 }
@@ -66,7 +85,7 @@ struct ContentView: View {
         return "\(minutesString):\(secondsString)"
     }
     
-    private func getTimerTitleForegroundColor() -> Color{
+    private func getForegroundColor() -> Color{
         switch timerState {
         case .notStarted:
             return .white
@@ -79,7 +98,7 @@ struct ContentView: View {
         }
     }
     
-    private func cancelButtonPressed() {
+    private func cancelButtonClicked() {
         guard timer != nil else { return }
         
         timer.invalidate()
@@ -94,7 +113,7 @@ struct ContentView: View {
         timerTitle = fetchTimerTitle()
     }
     
-    private func startButtonTapped() {
+    private func startButtonClicked() {
         if timerState == .notStarted || timerState == .paused {
             timerState = isBreakTimer ? .startedBreak : .startedWork
             startButtonTitle = "Pause"
