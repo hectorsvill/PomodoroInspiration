@@ -26,6 +26,8 @@ struct ContentView: View {
     @State var timerCountInSeconds = minutes25
     @State var timer: Timer! = nil
     
+    @State var circleTimer: CGFloat = 0
+    
     var body: some View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [.gray, .black]), startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -41,39 +43,60 @@ struct ContentView: View {
                             .stroke(Color.white, lineWidth: 2)
                     )
                 
-                Text(timerTitle)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .foregroundColor(getForegroundColor())
-                    .font(.system(size: 100, weight: .heavy, design: .default))
+                Spacer(minLength: bottomTopSpacer)
                 
-                HStack {
-                    Spacer()
+                ZStack {
+                    Circle()
+                        .trim(from: 0, to: 1)
+                        .stroke(
+                            Color.gray.opacity(0.10),
+                            style: StrokeStyle(lineWidth: 5, lineCap: .round)
+                        )
+                        .frame(width: 400, height: 400)
+                    
+                    Circle()
+                        .trim(from: 0, to: circleTimer)
+                        .stroke(
+                            isBreakTimer ? Color.green : .red,
+                            style: StrokeStyle(lineWidth: 5, lineCap: .round)
+                        )
+                        .frame(width: 400, height: 400)
+                        .rotationEffect(.init(degrees: 90))
+                    
+                    
+                    Text(timerTitle)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .foregroundColor(getForegroundColor())
+                        .font(.system(size: 100, weight: .heavy, design: .default))
+                }
+                
+                Spacer(minLength: bottomTopSpacer)
+                
+                HStack(spacing: 50) {
                     
                     Button(action: cancelButtonClicked) {
                         Text("Cancel")
+                            .foregroundColor(timerState == .notStarted ? .gray : .orange)
                     }
-                    .frame(maxWidth: 100, maxHeight: 100)
                     .disabled(timerState == .notStarted)
-                    .foregroundColor(timerState == .notStarted ? .gray : .orange)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.white, lineWidth: 2)
+                    .padding(30)
+                    .background(
+                        Capsule()
+                            .stroke(Color.gray, lineWidth: 0.5)
                     )
-                    
-                    
-                    Spacer(minLength: 16)
+                    .shadow(radius: 5)
                     
                     Button(action: startButtonClicked){
                         Text(startButtonTitle)
+                            .foregroundColor(getForegroundColor())
                     }
-                    .frame(maxWidth: 100, maxHeight: 100)
-                    .foregroundColor(getForegroundColor())
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.white, lineWidth: 2)
+                    .padding(30)
+                    .background(
+                        Capsule()
+                            .stroke(Color.gray, lineWidth: 0.5)
                     )
+                    .shadow(radius: 5)
                     
-                    Spacer()
                 }
                 
                 Spacer(minLength: bottomTopSpacer)
@@ -134,11 +157,13 @@ struct ContentView: View {
     private func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
             timerCountInSeconds -= 1
+            circleTimer += CGFloat(1.0 / (isBreakTimer ? CGFloat(minutes5) : CGFloat(minutes25)))
             
             timerTitle = fetchTimerTitle()
             
             if timerCountInSeconds == 0  {
                 timer.invalidate()
+                circleTimer = 0.0
                 if timerState == .startedBreak {
                     isBreakTimer = false
                     resetViews()
@@ -149,7 +174,6 @@ struct ContentView: View {
             }
         }
     }
-
     
     private func startBreak() {
         timerState = .startedBreak
