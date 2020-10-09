@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum TimerState {
-    case notStarted, started, paused, startedBreak
+    case notStarted, startedWork, paused, startedBreak
 }
 
 fileprivate let minutes25 = 1500
@@ -18,10 +18,9 @@ struct ContentView: View {
     @State private var timerState: TimerState = .notStarted
     @State private var startButtonTitle = "Start"
     @State private var timerTitle = "25:00"
-    @State private var cancelButtonIsDiasabled = true
-    @State private var isBreakTime = false
+    @State private var isBreakTimer = false
     // Timer
-    @State var timerCountInSeconds = minutes25 // 25 minutes in seconds
+    @State var timerCountInSeconds = minutes25
     @State var timer: Timer! = nil
     
     var body: some View {
@@ -31,17 +30,18 @@ struct ContentView: View {
             VStack {
                 Text(timerTitle)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .foregroundColor(isBreakTime ? .green : .red)
+                    .foregroundColor(getTimerTitleForegroundColor())
                     .font(.largeTitle)
+                
                 HStack {
                     Spacer()
                     
                     Button("Cancel") {
                         cancelButtonPressed()
                     }
-                    .disabled(cancelButtonIsDiasabled)
+                    .disabled(timerState == .notStarted)
                     .font(.headline)
-                    .foregroundColor(cancelButtonIsDiasabled ? .gray : .orange)
+                    .foregroundColor(timerState == .notStarted ? .gray : .orange)
                     
                     
                     Button(startButtonTitle) {
@@ -63,8 +63,20 @@ struct ContentView: View {
         let minutesString = "\(minutes < 10 ? "0" : "")\(minutes)"
         let secondsString = "\(seconds < 10 ? "0" : "")\(seconds)"
         
-        
         return "\(minutesString):\(secondsString)"
+    }
+    
+    private func getTimerTitleForegroundColor() -> Color{
+        switch timerState {
+        case .notStarted:
+            return .white
+        case .paused:
+            return .yellow
+        case .startedWork:
+            return .red
+        case .startedBreak:
+            return .blue
+        }
     }
     
     private func cancelButtonPressed() {
@@ -78,19 +90,16 @@ struct ContentView: View {
         timer = nil
         timerCountInSeconds = minutes25
         timerState = .notStarted
-        cancelButtonIsDiasabled = true
-        isBreakTime = false
         startButtonTitle = "Start"
         timerTitle = fetchTimerTitle()
     }
     
     private func startButtonTapped() {
-        cancelButtonIsDiasabled = false
-        if timerState == .notStarted || timerState == .paused || timerState == .startedBreak{
-            timerState = .started
+        if timerState == .notStarted || timerState == .paused {
+            timerState = isBreakTimer ? .startedBreak : .startedWork
             startButtonTitle = "Pause"
             startTimer()
-        } else if timerState == .started {
+        } else if timerState == .startedWork || timerState == .startedBreak{
             timerState = .paused
             startButtonTitle = "Resume"
             timer.invalidate()
@@ -105,10 +114,11 @@ struct ContentView: View {
             
             if timerCountInSeconds == 0  {
                 timer.invalidate()
-                cancelButtonIsDiasabled = true
                 if timerState == .startedBreak {
+                    isBreakTimer = false
                     resetViews()
                 }else {
+                    isBreakTimer = true
                     startBreak()
                 }
             }
@@ -118,10 +128,8 @@ struct ContentView: View {
     
     private func startBreak() {
         timerState = .startedBreak
-        isBreakTime = true
         timerCountInSeconds = minutes5
         timerTitle = fetchTimerTitle()
-        cancelButtonIsDiasabled = false
         startTimer()
     }
 }
