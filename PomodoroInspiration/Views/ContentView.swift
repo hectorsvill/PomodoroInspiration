@@ -11,22 +11,27 @@ enum TimerState {
     case notStarted, startedWork, paused, startedBreak
 }
 
-fileprivate let minutes25 = 1500
-fileprivate let minutes5 = 300
+enum TimerType {
+    case workTimer, breakTimer
+}
 
+fileprivate let minutes25 = 5 //1500
+fileprivate let minutes5 = 5 //300
 fileprivate let bottomTopSpacer: CGFloat = 50
-
 
 struct ContentView: View {
     @State private var timerState: TimerState = .notStarted
+    @State private var timerType: TimerType = .workTimer
     @State private var startButtonTitle = "Start"
     @State private var timerTitle = "25:00"
-    @State private var isBreakTimer = false
     // Timer
     @State var timerCountInSeconds = minutes25
     @State var timer: Timer! = nil
-    
     @State var circleTimer: CGFloat = 0
+    // Alert
+    @State var alertIspresented = false
+    @State var alertTitle = ""
+    @State var alertMessage = ""
     
     var body: some View {
         ZStack {
@@ -35,7 +40,7 @@ struct ContentView: View {
             VStack {
                 Spacer(minLength: bottomTopSpacer)
                 
-                Text(isBreakTimer ? "Break" : "Work")
+                Text(timerType == .breakTimer ? "Break" : "Work")
                     .frame(width: 50, height: 50, alignment: .center)
                     .font(.system(size: 18, weight: .light, design: .default))
                     .overlay(
@@ -57,11 +62,12 @@ struct ContentView: View {
                     Circle()
                         .trim(from: 0, to: circleTimer)
                         .stroke(
-                            isBreakTimer ? Color.green : .red,
+                            timerType == .breakTimer ? Color.blue : .red,
                             style: StrokeStyle(lineWidth: 5, lineCap: .round)
                         )
                         .frame(width: 400, height: 400)
-                        .rotationEffect(.init(degrees: 90))
+                        .rotationEffect(.init(degrees: -90))
+                        .animation(.easeOut)
                     
                     
                     Text(timerTitle)
@@ -102,6 +108,17 @@ struct ContentView: View {
                 Spacer(minLength: bottomTopSpacer)
             }
         }
+        .alert(isPresented: $alertIspresented) {
+            Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text(timerType == .workTimer ? "Continue" : "OK"))  {
+                if timerState == .startedBreak {
+                    timerType = .workTimer
+                    resetViews()
+                }else {
+                    timerType = .breakTimer
+                    startBreak()
+                }
+            })
+        }
     }
     
     private func fetchTimerTitle() -> String {
@@ -136,6 +153,7 @@ struct ContentView: View {
     
     private func resetViews() {
         timer = nil
+        circleTimer = 0.0
         timerCountInSeconds = minutes25
         timerState = .notStarted
         startButtonTitle = "Start"
@@ -144,7 +162,7 @@ struct ContentView: View {
     
     private func startButtonClicked() {
         if timerState == .notStarted || timerState == .paused {
-            timerState = isBreakTimer ? .startedBreak : .startedWork
+            timerState = timerType == .breakTimer ? .startedBreak : .startedWork
             startButtonTitle = "Pause"
             startTimer()
         } else if timerState == .startedWork || timerState == .startedBreak{
@@ -157,26 +175,34 @@ struct ContentView: View {
     private func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
             timerCountInSeconds -= 1
-            circleTimer += CGFloat(1.0 / (isBreakTimer ? CGFloat(minutes5) : CGFloat(minutes25)))
+            circleTimer += CGFloat(1.0 / (timerType == .breakTimer ? CGFloat(minutes5) : CGFloat(minutes25)))
             
             timerTitle = fetchTimerTitle()
             
             if timerCountInSeconds == 0  {
                 timer.invalidate()
-                circleTimer = 0.0
-                if timerState == .startedBreak {
-                    isBreakTimer = false
-                    resetViews()
-                }else {
-                    isBreakTimer = true
-                    startBreak()
-                }
+                timerCompleted()
             }
+        }
+    }
+    
+    private func timerCompleted() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            if timerState == .startedBreak {
+                alertTitle = "Great Work"
+                alertMessage = "Click Start to continue the Pomodoro Technique"
+            }else if timerState == .startedWork{
+                alertTitle = "Break Time"
+                alertMessage = "Click Continue to continue with a break"
+            }
+            
+            alertIspresented = true
         }
     }
     
     private func startBreak() {
         timerState = .startedBreak
+        circleTimer = 0.0
         timerCountInSeconds = minutes5
         timerTitle = fetchTimerTitle()
         startTimer()
