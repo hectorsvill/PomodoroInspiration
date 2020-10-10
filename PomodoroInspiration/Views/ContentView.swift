@@ -11,12 +11,13 @@ enum TimerState {
     case notStarted, startedWork, paused, startedBreak
 }
 
-enum TimerType {
-    case workTimer, breakTimer
+enum TimerType: String {
+    case workTimer = "Work"
+    case breakTimer = "Break"
 }
 
-fileprivate let minutes25 = 5 //1500
-fileprivate let minutes5 = 5 //300
+fileprivate let minutes25 = 10//1500
+fileprivate let minutes5 = 3//300
 fileprivate let bottomTopSpacer: CGFloat = 50
 
 struct ContentView: View {
@@ -25,13 +26,13 @@ struct ContentView: View {
     @State private var startButtonTitle = "Start"
     @State private var timerTitle = "25:00"
     // Timer
-    @State var timerCountInSeconds = minutes25
-    @State var timer: Timer! = nil
-    @State var circleTimer: CGFloat = 0
+    @State private var timerCountInSeconds = minutes25
+    @State private var timer: Timer! = nil
+    @State private var circleTimer: CGFloat = 0
     // Alert
-    @State var alertIspresented = false
-    @State var alertTitle = ""
-    @State var alertMessage = ""
+    @State private var alertIspresented = false
+    @State private var alertTitle = ""
+    @State private var alertMessage = ""
     
     var body: some View {
         ZStack {
@@ -40,7 +41,7 @@ struct ContentView: View {
             VStack {
                 Spacer(minLength: bottomTopSpacer)
                 
-                Text(timerType == .breakTimer ? "Break" : "Work")
+                Text(timerType.rawValue)
                     .frame(width: 50, height: 50, alignment: .center)
                     .font(.system(size: 18, weight: .light, design: .default))
                     .overlay(
