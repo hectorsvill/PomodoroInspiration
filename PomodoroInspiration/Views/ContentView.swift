@@ -8,7 +8,9 @@
 import SwiftUI
 
 enum TimerState {
-    case notStarted, startedWork, paused, startedBreak
+    case notStarted
+    case started
+    case paused
 }
 
 enum TimerType: String {
@@ -111,10 +113,10 @@ struct ContentView: View {
         }
         .alert(isPresented: $alertIspresented) {
             Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text(timerType == .workTimer ? "Continue" : "OK"))  {
-                if timerState == .startedBreak {
+                if timerType == .breakTimer {
                     timerType = .workTimer
                     resetViews()
-                }else {
+                }else if timerType == .workTimer {
                     timerType = .breakTimer
                     startBreak()
                 }
@@ -138,10 +140,8 @@ struct ContentView: View {
             return .white
         case .paused:
             return .yellow
-        case .startedWork:
-            return .red
-        case .startedBreak:
-            return .blue
+        case .started:
+            return timerType == .workTimer ? .red : .blue
         }
     }
     
@@ -163,10 +163,10 @@ struct ContentView: View {
     
     private func startButtonClicked() {
         if timerState == .notStarted || timerState == .paused {
-            timerState = timerType == .breakTimer ? .startedBreak : .startedWork
+            timerState = .started
             startButtonTitle = "Pause"
             startTimer()
-        } else if timerState == .startedWork || timerState == .startedBreak{
+        } else if timerState == .started {
             timerState = .paused
             startButtonTitle = "Resume"
             timer.invalidate()
@@ -189,12 +189,12 @@ struct ContentView: View {
     
     private func timerCompleted() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            if timerState == .startedBreak {
+            if timerType == .breakTimer {
                 alertTitle = "Great Work"
                 alertMessage = "Click Start to continue the Pomodoro Technique"
-            }else if timerState == .startedWork{
+            }else if timerType == .workTimer {
                 alertTitle = "Break Time"
-                alertMessage = "Click Continue to continue with a break"
+                alertMessage = "Click Continue to start break"
             }
             
             alertIspresented = true
@@ -202,7 +202,7 @@ struct ContentView: View {
     }
     
     private func startBreak() {
-        timerState = .startedBreak
+        timerState = .started
         circleTimer = 0.0
         timerCountInSeconds = minutes5
         timerTitle = fetchTimerTitle()
