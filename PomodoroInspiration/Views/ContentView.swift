@@ -7,17 +7,6 @@
 
 import SwiftUI
 
-enum TimerState {
-    case notStarted
-    case started
-    case paused
-}
-
-enum TimerType: String {
-    case workTimer = "Work"
-    case breakTimer = "Break"
-}
-
 fileprivate let minutes25 = 10//1500
 fileprivate let minutes5 = 3//300
 fileprivate let bottomTopSpacer: CGFloat = 50
