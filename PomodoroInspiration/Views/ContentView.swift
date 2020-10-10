@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-fileprivate let minutes25 = 10//1500
-fileprivate let minutes5 = 3//300
+fileprivate let minutes25 = 1500
+fileprivate let minutes5 = 300
 fileprivate let bottomTopSpacer: CGFloat = 50
+fileprivate let soundName = "Hero"
 
 struct ContentView: View {
     @State private var timerState: TimerState = .notStarted
@@ -24,6 +25,8 @@ struct ContentView: View {
     @State private var alertIspresented = false
     @State private var alertTitle = ""
     @State private var alertMessage = ""
+    // Sound
+    let sound = NSSound(named: soundName)
     
     var body: some View {
         ZStack {
@@ -102,6 +105,7 @@ struct ContentView: View {
         }
         .alert(isPresented: $alertIspresented) {
             Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text(timerType == .workTimer ? "Continue" : "OK"))  {
+                sound?.stop()
                 if timerType == .breakTimer {
                     timerType = .workTimer
                     resetViews()
@@ -178,6 +182,7 @@ struct ContentView: View {
     
     private func timerCompleted() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            sound?.play()
             if timerType == .breakTimer {
                 alertTitle = "Great Work"
                 alertMessage = "Click Start to continue the Pomodoro Technique"
