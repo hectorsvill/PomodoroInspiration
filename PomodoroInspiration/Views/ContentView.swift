@@ -46,6 +46,7 @@ struct ContentView: View {
                 Spacer(minLength: bottomTopSpacer)
                 
                 TimerView(timerType: $timerType, circleTimer: $circleTimer, timerTitle: $timerTitle)
+                    .frame(width: 400, height: 400, alignment: .center)
 
                 Spacer(minLength: bottomTopSpacer)
                 
@@ -57,21 +58,15 @@ struct ContentView: View {
                     }
                     .disabled(timerState == .notStarted)
                     .padding(30)
-                    .background(
-                        Capsule()
-                            .stroke(Color.gray, lineWidth: 0.5)
-                    )
                     .shadow(radius: 5)
+                    .background(Color.white)
                     
                     Button(action: startButtonClicked){
                         Text(startButtonTitle)
                             .foregroundColor(getForegroundColor())
                     }
                     .padding(30)
-                    .background(
-                        Capsule()
-                            .stroke(Color.gray, lineWidth: 0.5)
-                    )
+                    .background(Color.white)
                     .shadow(radius: 5)
                     
                 }
@@ -106,7 +101,7 @@ struct ContentView: View {
     private func getForegroundColor() -> Color {
         switch timerState {
         case .notStarted:
-            return .white
+            return .green
         case .paused:
             return .yellow
         case .started:
