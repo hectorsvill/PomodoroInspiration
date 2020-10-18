@@ -58,16 +58,12 @@ struct ContentView: View {
                     }
                     .disabled(timerState == .notStarted)
                     .padding(30)
-                    .shadow(radius: 5)
-                    .background(Color.white)
                     
                     Button(action: startButtonClicked){
                         Text(startButtonTitle)
                             .foregroundColor(getForegroundColor())
                     }
                     .padding(30)
-                    .background(Color.white)
-                    .shadow(radius: 5)
                     
                 }
                 
