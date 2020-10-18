@@ -7,8 +7,11 @@
 
 import SwiftUI
 
-fileprivate let minutes25 = 1500
-fileprivate let minutes5 = 300
+let workTimerSelection = [25, 35, 45]
+let breakTimerSelection = [5, 10, 15]
+
+fileprivate let minutes25 = 5//1500
+fileprivate let minutes5 = 5//300
 fileprivate let bottomTopSpacer: CGFloat = 50
 fileprivate let soundName = "Hero"
 
@@ -27,6 +30,11 @@ struct ContentView: View {
     @State private var alertMessage = ""
     // Sound
     let sound = NSSound(named: soundName)
+    
+    // TimerSetupView
+    @State private var isPresentingTimerSetupView = true
+    @State private var selectedWorkTimer = 0
+    @State private var selectedBreakTimer = 0
     
     var body: some View {
         ZStack {
@@ -82,6 +90,9 @@ struct ContentView: View {
                 }
             })
         }
+        .sheet(isPresented: $isPresentingTimerSetupView) {
+            TimerSetupView(selectedWorkTimer: $selectedWorkTimer, selectedBreakTimer: $selectedBreakTimer)
+        }
     }
     
     private func fetchTimerTitle() -> String {
@@ -119,6 +130,7 @@ struct ContentView: View {
         timerState = .notStarted
         startButtonTitle = "Start"
         timerTitle = fetchTimerTitle()
+        isPresentingTimerSetupView.toggle()
     }
     
     private func startButtonClicked() {
