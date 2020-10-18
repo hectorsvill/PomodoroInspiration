@@ -26,7 +26,7 @@ struct TimerView: View {
             Circle()
                 .trim(from: 0, to: circleTimer)
                 .stroke(
-                    timerType == .breakTimer ? Color.blue : .red,
+                    fetchTimerColor(),
                     style: StrokeStyle(lineWidth: strokeStyleLineWidth, lineCap: .round)
                 )
                 .rotationEffect(.init(degrees: -90))
@@ -35,9 +35,13 @@ struct TimerView: View {
             
             Text(timerTitle)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .foregroundColor(Color.red)
+                .foregroundColor(fetchTimerColor())
                 .font(.system(size: 100, weight: .heavy, design: .default))
         }
         
+    }
+    
+    func fetchTimerColor() -> Color {
+        timerType == .breakTimer ? Color.blue : .red
     }
 }
