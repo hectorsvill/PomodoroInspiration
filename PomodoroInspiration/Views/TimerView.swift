@@ -21,7 +21,6 @@ struct TimerView: View {
                     Color.gray.opacity(0.10),
                     style: StrokeStyle(lineWidth: strokeStyleLineWidth, lineCap: .round)
                 )
-                
             
             Circle()
                 .trim(from: 0, to: circleTimer)
@@ -40,8 +39,14 @@ struct TimerView: View {
         }
         
     }
-    
+
     func fetchTimerColor() -> Color {
         timerType == .breakTimer ? Color.blue : .red
+    }
+}
+
+struct TimerView_Previews: PreviewProvider {
+    static var previews: some View {
+        TimerView(timerType: .constant(TimerType.workTimer), circleTimer: .constant(0.5), timerTitle: .constant("25:00"))
     }
 }
