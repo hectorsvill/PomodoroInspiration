@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct TimerSetupView: View {
+    private let workTimerSelection = [25, 35, 45]
+    private let breakTimerSelection = [5, 10, 15]
     @Environment(\.presentationMode) var presentationMode
-    @Binding var selectedWorkTimer: Int
-    @Binding var selectedBreakTimer: Int
+    @ObservedObject var timerSetup: TimerSetup
     
     var body: some View {
         VStack {
@@ -21,8 +22,7 @@ struct TimerSetupView: View {
             Spacer(minLength: 50)
             
             Form {
-                
-                Picker(selection: $selectedWorkTimer, label: Text("Work Timer:")){
+                Picker(selection: $timerSetup.selectedWorkTimer, label: Text("Work Timer:")){
                     ForEach(workTimerSelection, id: \.self) { workTimer in
                         Text("\(workTimer)")
                     }
@@ -31,7 +31,7 @@ struct TimerSetupView: View {
                 
                 Spacer()
                 
-                Picker(selection: $selectedBreakTimer, label: Text("Break Timer:")){
+                Picker(selection: $timerSetup.selectedBreakTimer, label: Text("Break Timer:")){
                     ForEach(breakTimerSelection, id: \.self) { breakTimer in
                         Text("\(breakTimer)")   
                     }
@@ -54,8 +54,8 @@ struct TimerSetupView: View {
     }
 }
 
-struct TimerSetupView_Previews: PreviewProvider {
-    static var previews: some View {
-        TimerSetupView(selectedWorkTimer: .constant(1), selectedBreakTimer: .constant(1))
-    }
-}
+//struct TimerSetupView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        TimerSetupView(selectedWorkTimer: .constant(1), selectedBreakTimer: .constant(1))
+//    }
+//}
