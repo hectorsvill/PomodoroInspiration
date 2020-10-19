@@ -7,15 +7,11 @@
 
 import SwiftUI
 
-let workTimerSelection = [25, 35, 45]
-let breakTimerSelection = [5, 10, 15]
-
-fileprivate let minutes25 = 5//1500
-fileprivate let minutes5 = 5//300
 fileprivate let bottomTopSpacer: CGFloat = 50
 fileprivate let soundName = "Hero"
 
 struct ContentView: View {
+    @ObservedObject var timerSetup = TimerSetup()
     @State private var timerState: TimerState = .notStarted
     @State private var timerType: TimerType = .workTimer
     @State private var startButtonTitle = "Start"
@@ -29,18 +25,14 @@ struct ContentView: View {
     
     // TimerSetupView
     @State private var isPresentingTimerSetupView = true
-    @State private var selectedWorkTimer = 0
-    @State private var selectedBreakTimer = 0
     
     // Timer
-    @State private var timerCountInSeconds = minutes25
     @State private var timer: Timer! = nil
     @State private var circleTimer: CGFloat = 0
-    @State private var timerTitle = "25:00"
     
     var body: some View {
         ZStack {
-            LinearGradient(gradient: Gradient(colors: [.gray, .black]), startPoint: .topLeading, endPoint: .bottomTrailing)
+            LinearGradient(gradient: Gradient(colors: [.white, .black]), startPoint: .topLeading, endPoint: .bottomTrailing)
             
             VStack {
                 Spacer(minLength: bottomTopSpacer)
@@ -55,7 +47,7 @@ struct ContentView: View {
                 
                 Spacer(minLength: bottomTopSpacer)
                 
-                TimerView(timerType: $timerType, circleTimer: $circleTimer, timerTitle: $timerTitle)
+                TimerView(timerType: $timerType, circleTimer: $circleTimer, timerTitle: $timerSetup.timerTitle)
                     .frame(width: 400, height: 400, alignment: .center)
 
                 Spacer(minLength: bottomTopSpacer)
@@ -92,19 +84,9 @@ struct ContentView: View {
                 }
             })
         }
-//        .sheet(isPresented: $isPresentingTimerSetupView) {
-//            TimerSetupView(selectedWorkTimer: $selectedWorkTimer, selectedBreakTimer: $selectedBreakTimer)
-//        }
-    }
-    
-    private func fetchTimerTitle() -> String {
-        let minutes = timerCountInSeconds / 60
-        let seconds = timerCountInSeconds % 60
-        
-        let minutesString = "\(minutes < 10 ? "0" : "")\(minutes)"
-        let secondsString = "\(seconds < 10 ? "0" : "")\(seconds)"
-        
-        return "\(minutesString):\(secondsString)"
+        .sheet(isPresented: $isPresentingTimerSetupView) {
+            TimerSetupView(timerSetup: timerSetup)
+        }
     }
     
     private func getForegroundColor() -> Color {
@@ -128,10 +110,10 @@ struct ContentView: View {
     private func resetViews() {
         timer = nil
         circleTimer = 0.0
-        timerCountInSeconds = minutes25
+        timerSetup.timerCountInSeconds = timerSetup.workMinutes
+        timerSetup.fetchTimerTitle()
         timerState = .notStarted
         startButtonTitle = "Start"
-        timerTitle = fetchTimerTitle()
         isPresentingTimerSetupView.toggle()
     }
     
@@ -149,12 +131,12 @@ struct ContentView: View {
     
     private func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-            timerCountInSeconds -= 1
-            circleTimer += CGFloat(1.0 / (timerType == .breakTimer ? CGFloat(minutes5) : CGFloat(minutes25)))
+            timerSetup.timerCountInSeconds -= 1
+            circleTimer += CGFloat(1.0 / (timerType == .breakTimer ? CGFloat(timerSetup.breakMinutes) : CGFloat(timerSetup.workMinutes)))
             
-            timerTitle = fetchTimerTitle()
+            timerSetup.fetchTimerTitle()
             
-            if timerCountInSeconds == 0  {
+            if timerSetup.timerCountInSeconds == 0  {
                 timer.invalidate()
                 timerCompleted()
             }
@@ -164,6 +146,7 @@ struct ContentView: View {
     private func timerCompleted() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             sound?.play()
+            
             if timerType == .breakTimer {
                 alertTitle = "Great Work"
                 alertMessage = "Click Start to continue the Pomodoro Technique"
@@ -171,7 +154,7 @@ struct ContentView: View {
                 alertTitle = "Break Time"
                 alertMessage = "Click Continue to start break"
             }
-            
+
             alertIspresented = true
         }
     }
@@ -179,8 +162,8 @@ struct ContentView: View {
     private func startBreak() {
         timerState = .started
         circleTimer = 0.0
-        timerCountInSeconds = minutes5
-        timerTitle = fetchTimerTitle()
+        timerSetup.setupBreakTimer()
+        timerSetup.fetchTimerTitle()
         startTimer()
     }
 }
