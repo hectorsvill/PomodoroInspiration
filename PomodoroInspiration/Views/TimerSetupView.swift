@@ -28,7 +28,7 @@ struct TimerSetupView: View {
                     }
                 }
                 .pickerStyle(SegmentedPickerStyle())
-                
+
                 Spacer()
                 
                 Picker(selection: $timerSetup.selectedBreakTimer, label: Text("Break Timer:")){
@@ -39,9 +39,6 @@ struct TimerSetupView: View {
                 .pickerStyle(SegmentedPickerStyle())
                 
                 Spacer()
-                
-                
-                
             }
             
         
@@ -54,8 +51,8 @@ struct TimerSetupView: View {
     }
 }
 
-//struct TimerSetupView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        TimerSetupView(selectedWorkTimer: .constant(1), selectedBreakTimer: .constant(1))
-//    }
-//}
+struct TimerSetupView_Previews: PreviewProvider {
+    static var previews: some View {
+        TimerSetupView(timerSetup: TimerSetup())
+    }
+}
