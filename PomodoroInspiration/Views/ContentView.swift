@@ -19,11 +19,7 @@ struct ContentView: View {
     @State private var timerState: TimerState = .notStarted
     @State private var timerType: TimerType = .workTimer
     @State private var startButtonTitle = "Start"
-    @State private var timerTitle = "25:00"
-    // Timer
-    @State private var timerCountInSeconds = minutes25
-    @State private var timer: Timer! = nil
-    @State private var circleTimer: CGFloat = 0
+
     // Alert
     @State private var alertIspresented = false
     @State private var alertTitle = ""
@@ -35,6 +31,12 @@ struct ContentView: View {
     @State private var isPresentingTimerSetupView = true
     @State private var selectedWorkTimer = 0
     @State private var selectedBreakTimer = 0
+    
+    // Timer
+    @State private var timerCountInSeconds = minutes25
+    @State private var timer: Timer! = nil
+    @State private var circleTimer: CGFloat = 0
+    @State private var timerTitle = "25:00"
     
     var body: some View {
         ZStack {
@@ -90,9 +92,9 @@ struct ContentView: View {
                 }
             })
         }
-        .sheet(isPresented: $isPresentingTimerSetupView) {
-            TimerSetupView(selectedWorkTimer: $selectedWorkTimer, selectedBreakTimer: $selectedBreakTimer)
-        }
+//        .sheet(isPresented: $isPresentingTimerSetupView) {
+//            TimerSetupView(selectedWorkTimer: $selectedWorkTimer, selectedBreakTimer: $selectedBreakTimer)
+//        }
     }
     
     private func fetchTimerTitle() -> String {

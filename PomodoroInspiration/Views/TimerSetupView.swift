@@ -27,6 +27,7 @@ struct TimerSetupView: View {
                         Text("\(workTimer)")
                     }
                 }
+                .pickerStyle(SegmentedPickerStyle())
                 
                 Spacer()
                 
@@ -35,12 +36,14 @@ struct TimerSetupView: View {
                         Text("\(breakTimer)")   
                     }
                 }
+                .pickerStyle(SegmentedPickerStyle())
                 
                 Spacer()
                 
                 
                 
             }
+            
         
             Button("Done") {
                 presentationMode.wrappedValue.dismiss()
