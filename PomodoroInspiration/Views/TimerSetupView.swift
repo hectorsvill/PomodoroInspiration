@@ -40,14 +40,12 @@ struct TimerSetupView: View {
                 
                 Spacer()
             }
-            
         
             Button("Done") {
                 presentationMode.wrappedValue.dismiss()
             }
         }
         .frame(width: 400, height: 200, alignment: .center)
-        
     }
 }
 

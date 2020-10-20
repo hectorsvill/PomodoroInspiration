@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TimerView: View {
-    let strokeStyleLineWidth: CGFloat = 10
+    private let strokeStyleLineWidth: CGFloat = 10
     @Binding var timerType: TimerType
     @Binding var circleTimer: CGFloat
     @Binding var timerTitle: String
@@ -37,7 +37,6 @@ struct TimerView: View {
                 .foregroundColor(fetchTimerColor())
                 .font(.system(size: 100, weight: .heavy, design: .default))
         }
-        
     }
 
     func fetchTimerColor() -> Color {

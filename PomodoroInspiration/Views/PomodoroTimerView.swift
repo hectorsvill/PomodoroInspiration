@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  PomodoroTimerView.swift
 //  PomodoroInspiration
 //
 //  Created by Hector Villasano on 10/8/20.
@@ -10,7 +10,7 @@ import SwiftUI
 fileprivate let bottomTopSpacer: CGFloat = 50
 fileprivate let soundName = "Hero"
 
-struct ContentView: View {
+struct PomodoroTimerView: View {
     @ObservedObject var timerSetup = TimerSetup()
     @State private var timerState: TimerState = .notStarted
     @State private var timerType: TimerType = .workTimer
@@ -171,6 +171,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        PomodoroTimerView()
     }
 }

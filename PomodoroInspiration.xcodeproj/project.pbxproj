@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3B4540DE252FB18A005AAA96 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4540DD252FB18A005AAA96 /* AppDelegate.swift */; };
-		3B4540E0252FB18A005AAA96 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4540DF252FB18A005AAA96 /* ContentView.swift */; };
+		3B4540E0252FB18A005AAA96 /* PomodoroTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4540DF252FB18A005AAA96 /* PomodoroTimerView.swift */; };
 		3B4540E2252FB18C005AAA96 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3B4540E1252FB18C005AAA96 /* Assets.xcassets */; };
 		3B4540E5252FB18C005AAA96 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3B4540E4252FB18C005AAA96 /* Preview Assets.xcassets */; };
 		3B4540E8252FB18C005AAA96 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B4540E6252FB18C005AAA96 /* Main.storyboard */; };
@@ -22,7 +22,7 @@
 /* Begin PBXFileReference section */
 		3B4540DA252FB18A005AAA96 /* PomodoroInspiration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PomodoroInspiration.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4540DD252FB18A005AAA96 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		3B4540DF252FB18A005AAA96 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		3B4540DF252FB18A005AAA96 /* PomodoroTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerView.swift; sourceTree = "<group>"; };
 		3B4540E1252FB18C005AAA96 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3B4540E4252FB18C005AAA96 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		3B4540E7252FB18C005AAA96 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -89,7 +89,7 @@
 		3B4540F2252FB8A0005AAA96 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				3B4540DF252FB18A005AAA96 /* ContentView.swift */,
+				3B4540DF252FB18A005AAA96 /* PomodoroTimerView.swift */,
 				3B8F50CE2538FCBC00D7123D /* TimerView.swift */,
 				3B54D853253CDEF4002926F8 /* TimerSetupView.swift */,
 			);
@@ -184,7 +184,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B8F50CF2538FCBC00D7123D /* TimerView.swift in Sources */,
-				3B4540E0252FB18A005AAA96 /* ContentView.swift in Sources */,
+				3B4540E0252FB18A005AAA96 /* PomodoroTimerView.swift in Sources */,
 				3B54D85F253D25DA002926F8 /* TimerSetup.swift in Sources */,
 				3B54D854253CDEF4002926F8 /* TimerSetupView.swift in Sources */,
 				3B6617B425321F2C00975E72 /* TimerType.swift in Sources */,
